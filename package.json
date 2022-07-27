@@ -1,5 +1,5 @@
 {
-    "name": "expo-keycloak-auth",
+    "name": "@anzeblabla/expo-keycloak-auth",
     "version": "1.0.12",
     "description": "expo-auth-session wrapper for keycloak authentication",
     "author": "rubhiauliatirtacom",

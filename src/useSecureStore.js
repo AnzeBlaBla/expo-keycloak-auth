@@ -10,7 +10,7 @@ export default function useSecureStore(key) {
                 return await SecureStore.setItemAsync(key, value);
             } else {
                 const numberOfChunks = Math.ceil(value.length / STORAGE_LIMIT);
-                await SecureStore.setItemAsync(key + NUMBER_KEY, numberOfChunks);
+                await SecureStore.setItemAsync(key + NUMBER_KEY, numberOfChunks.toString());
                 for (let i = 0; i < numberOfChunks; i++) {
                     let thisChunk = value.substring(i * STORAGE_LIMIT, (i + 1) * STORAGE_LIMIT);
                     await SecureStore.setItemAsync(key + '_' + i, thisChunk);
@@ -18,10 +18,11 @@ export default function useSecureStore(key) {
             }
         },
         getItem: async () => {
-            const numberOfChunks = await SecureStore.getItemAsync(key + NUMBER_KEY);
-            if (!numberOfChunks) {
+            const numberOfChunksString = await SecureStore.getItemAsync(key + NUMBER_KEY);
+            if (!numberOfChunksString) {
                 return null;
             }
+            const numberOfChunks = parseInt(numberOfChunksString);
             let value = '';
             for (let i = 0; i < numberOfChunks; i++) {
                 let thisChunk = await SecureStore.getItemAsync(key + '_' + i);

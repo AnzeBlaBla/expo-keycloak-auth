@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { AppState, Platform } from "react-native"
-import { useAsyncStorage } from '@react-native-async-storage/async-storage';
 import { REFRESH_TIME_BUFFER, TOKEN_STORAGE_KEY } from './const';
 import { getCurrentTimeInSeconds } from "./helpers"
 import * as AuthSession from "expo-auth-session";
 import { TokenResponse } from "expo-auth-session";
+import useSecureStore from './useSecureStore';
 
 const useTokenStorage = ({
   tokenStorageKey = TOKEN_STORAGE_KEY,
@@ -13,7 +13,7 @@ const useTokenStorage = ({
 }, config, discovery) => {
 
   const [token, setToken] = useState()
-  const { getItem, setItem, removeItem } = useAsyncStorage(tokenStorageKey);
+  const { getItem, setItem, removeItem } = useSecureStore(tokenStorageKey);
   const refreshHandler = useRef(null)
   const appState = useRef(AppState.currentState);
   const refreshTime = useRef(null)

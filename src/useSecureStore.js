@@ -7,7 +7,7 @@ export default function useSecureStore(key) {
     return {
         setItem: async (value) => {
             if (value.length <= STORAGE_LIMIT) {
-                return await SecureStore.setItemAsync(key, stringified);
+                return await SecureStore.setItemAsync(key, value);
             } else {
                 const numberOfChunks = Math.ceil(value.length / STORAGE_LIMIT);
                 await SecureStore.setItemAsync(key + NUMBER_KEY, numberOfChunks);

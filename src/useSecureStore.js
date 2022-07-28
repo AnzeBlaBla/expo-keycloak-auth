@@ -30,8 +30,16 @@ export default function useSecureStore(key) {
             }
             return value;
         },
-        removeItem: () => {
-          SecureStore.deleteItemAsync(key)
+        removeItem: async () => {
+            const numberOfChunksString = await SecureStore.getItemAsync(key + NUMBER_KEY);
+            if (!numberOfChunksString) {
+                return null;
+            }
+            const numberOfChunks = parseInt(numberOfChunksString);
+            for (let i = 0; i < numberOfChunks; i++) {
+                await SecureStore.deleteItemAsync(key + '_' + i);
+            }
+            await SecureStore.deleteItemAsync(key + NUMBER_KEY);
         },
     };
 }

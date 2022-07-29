@@ -11,6 +11,10 @@ import { handleTokenExchange, getRealmURL } from './helpers';
 import {
   NATIVE_REDIRECT_PATH,
 } from './const';
+import useNetworkState from './useNetworkState';
+import useMounted from './useMounted';
+
+import { resolveDiscoveryAsync } from 'expo-auth-session/src/Discovery';
 
 // export interface IKeycloakConfiguration extends Partial<AuthRequestConfig> {
 //   clientId: string;
@@ -26,7 +30,20 @@ import {
 
 export const KeycloakProvider = ({ realm, clientId, url, extraParams, children, ...options }) => {
 
-  const discovery = useAutoDiscovery(getRealmURL({ realm, url }));
+  //const discovery = useAutoDiscovery();
+  const [discovery, setDiscovery] = useState(null);
+  const mounted = useMounted();
+  useNetworkState(state => {
+    if (state.isConnected) {
+      resolveDiscoveryAsync(getRealmURL({ realm, url })).then(discovery => {
+        if (mounted()) {
+          setDiscovery(discovery);
+        }
+      });
+    }
+});
+
+
   const redirectUri = AuthSession.makeRedirectUri({
     native: `${options.scheme ?? 'exp'}://${options.nativeRedirectPath ?? NATIVE_REDIRECT_PATH}`,
     useProxy: !options.scheme,
@@ -84,7 +101,6 @@ export const KeycloakProvider = ({ realm, clientId, url, extraParams, children, 
         })
     }
   }, [response])
-
   return (
     <KeycloakContext.Provider
       value={{

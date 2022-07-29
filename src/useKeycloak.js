@@ -8,6 +8,7 @@ export const useKeycloak = () => {
     logout,
     ready = false,
     token = null,
+    loggingIn = false,
   } = useContext(KeycloakContext);
 
   return {
@@ -15,6 +16,7 @@ export const useKeycloak = () => {
     login,
     logout,
     ready,
-    token: token?.accessToken ?? null
+    token: token?.accessToken ?? null,
+    loggingIn
   }
 }

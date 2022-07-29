@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Platform } from 'react-native'
 import * as AuthSession from 'expo-auth-session';
 import {
@@ -40,7 +40,10 @@ export const KeycloakProvider = ({ realm, clientId, url, extraParams, children, 
   );
   const [currentToken, updateToken] = useTokenStorage(options, config, discovery)
 
+  const [loggingIn, setLoggingIn] = useState(false);
+
   const handleLogin = useCallback((options) => {
+    setLoggingIn(true);
     return promptAsync(options);
   }, [request])
 
@@ -71,8 +74,14 @@ export const KeycloakProvider = ({ realm, clientId, url, extraParams, children, 
   }
   useEffect(() => {
     if (response) {
+      if(response.type === 'cancel') {
+        setLoggingIn(false);
+      }
       handleTokenExchange({ response, discovery, config })
-        .then(updateToken)
+        .then(token => {
+          setLoggingIn(false);
+          updateToken(token)
+        })
     }
   }, [response])
 
@@ -84,6 +93,7 @@ export const KeycloakProvider = ({ realm, clientId, url, extraParams, children, 
         logout: handleLogout,
         ready: discovery !== null && request !== null && currentToken !== undefined,
         token: currentToken,
+        loggingIn: loggingIn,
       }}
     >
       {children}

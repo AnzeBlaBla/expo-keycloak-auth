@@ -36,9 +36,7 @@ export const KeycloakProvider = ({ realm, clientId, url, extraParams, children, 
   const mounted = useMounted();
   useNetworkState(state => {
     if (state.isConnected && !discovery) {
-      (async () => {
-        throw new Error('Not implemented');
-      })().then(discovery => {
+      resolveDiscoveryAsync(getRealmURL({ realm, url })).then(discovery => {
         if (mounted()) {
           setDiscovery(discovery);
         }

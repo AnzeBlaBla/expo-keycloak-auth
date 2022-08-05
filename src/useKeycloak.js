@@ -2,21 +2,10 @@ import { useContext, useMemo } from 'react';
 import { KeycloakContext } from './KeycloakContext';
 
 export const useKeycloak = () => {
-  const {
-    isLoggedIn,
-    login,
-    logout,
-    ready = false,
-    token = null,
-    loggingIn = false,
-  } = useContext(KeycloakContext);
+  const val = useContext(KeycloakContext);
 
   return {
-    isLoggedIn,
-    login,
-    logout,
-    ready,
-    token: token?.accessToken ?? null,
-    loggingIn
+    ...val,
+    token: val.token?.accessToken ?? null,
   }
 }

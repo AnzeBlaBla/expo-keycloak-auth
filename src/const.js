@@ -1,5 +1,6 @@
 export const KC_INITIAL_VALUE = {
   ready: false,
+  error: null,
   isLoggedIn: false,
   login: () => console.error('KC Not Initialized.'),
   logout: () => console.error('Not Logged In.'),

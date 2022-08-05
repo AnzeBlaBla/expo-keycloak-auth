@@ -14,19 +14,15 @@ export const handleTokenExchange = async ({
   discovery,
   config,
 }) => {
-  try {
-    if (response?.type === 'success' && !!(discovery?.tokenEndpoint)) {
-      const token = await AuthSession.exchangeCodeAsync(
-        { code: response.params.code, ...config },
-        discovery,
-      );
-      return token;
-    }
-    if (response?.type === 'error') {
-      return null;
-    }
-    return null;
-  } catch (error) {
+  if (response?.type === 'success' && !!(discovery?.tokenEndpoint)) {
+    const token = await AuthSession.exchangeCodeAsync(
+      { code: response.params.code, ...config },
+      discovery,
+    );
+    return token;
+  }
+  if (response?.type === 'error') {
     return null;
   }
+  return null;
 };

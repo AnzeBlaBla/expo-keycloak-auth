@@ -29,15 +29,22 @@ import { resolveDiscoveryAsync } from 'expo-auth-session/src/Discovery';
 
 
 export const KeycloakProvider = ({ realm, clientId, url, extraParams, children, ...options }) => {
+  const [error, setError] = useState(null);
 
   //const discovery = useAutoDiscovery();
   const [discovery, setDiscovery] = useState(null);
   const mounted = useMounted();
   useNetworkState(state => {
-    if (state.isConnected) {
-      resolveDiscoveryAsync(getRealmURL({ realm, url })).then(discovery => {
+    if (state.isConnected && !discovery) {
+      (async () => {
+        throw new Error('Not implemented');
+      })().then(discovery => {
         if (mounted()) {
           setDiscovery(discovery);
+        }
+      }).catch(error => {
+        if (mounted()) {
+          setError(error);
         }
       });
     }
@@ -98,6 +105,10 @@ export const KeycloakProvider = ({ realm, clientId, url, extraParams, children, 
         .then(token => {
           setLoggingIn(false);
           updateToken(token)
+        }).catch(error => {
+          console.log("napaka handleTokenExchange", error)
+          setLoggingIn(false);
+          setError(error);
         })
     }
   }, [response])
@@ -108,6 +119,7 @@ export const KeycloakProvider = ({ realm, clientId, url, extraParams, children, 
         login: handleLogin,
         logout: handleLogout,
         ready: discovery !== null && request !== null && currentToken !== undefined,
+        error,
         token: currentToken,
         loggingIn: loggingIn,
       }}

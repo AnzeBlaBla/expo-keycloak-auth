@@ -28,7 +28,7 @@ import { resolveDiscoveryAsync } from 'expo-auth-session/src/Discovery';
 // }
 
 
-export const KeycloakProvider = ({ realm, clientId, url, extraParams, children, ...options }) => {
+export const KeycloakProvider = ({ realm, clientId, url, extraParams, scopes = [], children, ...options }) => {
   const [error, setError] = useState(null);
 
   //const discovery = useAutoDiscovery();
@@ -54,7 +54,7 @@ export const KeycloakProvider = ({ realm, clientId, url, extraParams, children, 
     useProxy: !options.scheme,
   });
 
-  const config = { redirectUri, clientId, realm, url, extraParams }
+  const config = { redirectUri, clientId, realm, url, scopes, extraParams }
 
   const [request, response, promptAsync] = useAuthRequest(
     { usePKCE: false, ...config },

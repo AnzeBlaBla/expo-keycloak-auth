@@ -106,7 +106,6 @@ export const KeycloakProvider = ({ realm, clientId, url, extraParams, children, 
           setLoggingIn(false);
           updateToken(token)
         }).catch(error => {
-          console.log("napaka handleTokenExchange", error)
           setLoggingIn(false);
           setError(error);
         })

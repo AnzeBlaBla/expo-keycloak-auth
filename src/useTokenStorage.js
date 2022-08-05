@@ -13,11 +13,26 @@ const useTokenStorage = ({
 }, config, discovery) => {
 
   const [token, setToken] = useState()
+
+  const [needTokenRefresh, setNeedTokenRefresh] = useState(false)
+
   const { getItem, setItem, removeItem } = useSecureStore(tokenStorageKey);
   const refreshHandler = useRef(null)
   const appState = useRef(AppState.currentState);
   const refreshTime = useRef(null)
   const tokenData = useRef(null)
+
+  useEffect(() => {
+    if (!needTokenRefresh) return
+    if (!discovery) return; // Wait for discovery
+    if (!tokenData.current) { // We need token data
+      setNeedTokenRefresh(false);
+      return;
+    }
+    handleTokenRefresh(tokenData.current)
+    setNeedTokenRefresh(false);
+  }, [needTokenRefresh, discovery])
+
 
   async function updateAndSaveToken(newToken) {
     try {
@@ -57,7 +72,7 @@ const useTokenStorage = ({
           const now = getCurrentTimeInSeconds()
 
           if (refreshTime.current <= now) {
-            handleTokenRefresh(tokenData.current)
+            setNeedTokenRefresh(true)
           } else {
             const timeout = 1000 * (refreshTime.current - now)
             refreshHandler.current = setTimeout(() => {
@@ -71,11 +86,7 @@ const useTokenStorage = ({
     const subscription = AppState.addEventListener("change", handleAppState);
 
     return () => {
-      if (subscription) {
-        subscription.remove()
-      } else {
-        AppState.removeEventListener("change", handleAppState)
-      }
+      subscription.remove()
     };
   }, []);
 

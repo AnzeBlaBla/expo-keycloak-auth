@@ -11,7 +11,7 @@ This library is based on [balgamat/expo-keycloak](https://www.npmjs.com/package/
 Install peer dependencies
 
 ```bash
-expo install @react-native-async-storage/async-storage expo-auth-session expo-random
+expo install expo-auth-session
 ```
 
 Install this library

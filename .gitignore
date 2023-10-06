@@ -1,4 +1,14 @@
 node_modules
 example
-# macOS
+android
+.expo
+.expo-shared
+DEADJOE
 .DS_Store
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+.idea

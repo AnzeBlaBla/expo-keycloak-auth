@@ -1,4 +1,9 @@
 node_modules
 example
-# macOS
+android
+.expo
+.expo-shared
+DEADJOE
 .DS_Store
+.yarn/*
+.idea

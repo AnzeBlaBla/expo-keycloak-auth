@@ -6,6 +6,13 @@ This library is based on [balgamat/expo-keycloak](https://www.npmjs.com/package/
 
 [![NPM](https://img.shields.io/npm/v/expo-keycloak-auth.svg)](https://www.npmjs.com/package/expo-keycloak-auth)
 
+## Publish
+
+```bash
+npm publish --access public
+```
+
+
 ## Install
 
 Install peer dependencies

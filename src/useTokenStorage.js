@@ -76,7 +76,7 @@ const useTokenStorage = ({
           } else {
             const timeout = 1000 * (refreshTime.current - now)
             refreshHandler.current = setTimeout(() => {
-              handleTokenRefresh(tokenData.current)
+              setNeedTokenRefresh(true)
             }, timeout)
           }
         }

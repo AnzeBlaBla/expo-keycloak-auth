@@ -1,6 +1,6 @@
 {
     "name": "@anzeblabla/expo-keycloak-auth",
-    "version": "1.4.8",
+    "version": "1.4.9",
     "description": "expo-auth-session wrapper for keycloak authentication",
     "author": "rubhiauliatirtacom",
     "license": "MIT",
@@ -18,7 +18,7 @@
         "expo-yarn-workspaces": "^1.2.1"
     },
     "peerDependencies": {
-        "expo-auth-session": "~5.0.2        "
+        "expo-auth-session": "~5.4.0"
     },
     "dependencies": {
         "expo-secure-store": "~12.8.1"

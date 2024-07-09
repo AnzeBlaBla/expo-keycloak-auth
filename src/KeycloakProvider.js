@@ -34,6 +34,8 @@ export const KeycloakProvider = ({ realm, clientId, url, extraParams, scopes = [
   //const discovery = useAutoDiscovery();
   const [discovery, setDiscovery] = useState(null);
   const mounted = useMounted();
+  // The callback is called soon after it's registered, then every time the network state changes.
+  // We use this to initialize discovery, when the network is connected.
   useNetworkState(state => {
     if (state.isConnected && !discovery) {
       resolveDiscoveryAsync(getRealmURL({ realm, url })).then(discovery => {

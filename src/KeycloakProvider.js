@@ -30,14 +30,12 @@ import { resolveDiscoveryAsync } from 'expo-auth-session/src/Discovery';
 
 export const KeycloakProvider = ({ realm, clientId, url, extraParams, scopes = [], children, ...options }) => {
   const [error, setError] = useState(null);
-
-  //const discovery = useAutoDiscovery();
   const [discovery, setDiscovery] = useState(null);
   const mounted = useMounted();
-  // The callback is called soon after it's registered, then every time the network state changes.
-  // We use this to initialize discovery, when the network is connected.
-  useNetworkState(state => {
-    if (state.isConnected && !discovery) {
+
+  const netState = useNetworkState();
+  useEffect(() => {
+    if (netState.isConnected && !discovery && realm && url) {
       resolveDiscoveryAsync(getRealmURL({ realm, url })).then(discovery => {
         if (mounted()) {
           setDiscovery(discovery);
@@ -48,7 +46,8 @@ export const KeycloakProvider = ({ realm, clientId, url, extraParams, scopes = [
         }
       });
     }
-});
+  }, [netState.isConnected, realm, url]);
+
 
 
   const redirectUri = AuthSession.makeRedirectUri({
@@ -79,16 +78,16 @@ export const KeycloakProvider = ({ realm, clientId, url, extraParams, scopes = [
           { token: currentToken?.accessToken, ...config }, discovery
         )
       }
-      if(discovery.endSessionEndpoint) {
+      if (discovery.endSessionEndpoint) {
         fetch(`${discovery.endSessionEndpoint}`, {
-          method: 'POST',         
+          method: 'POST',
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
           },
           body: `client_id=${clientId}&refresh_token=${currentToken.refreshToken}`
         })
       }
-      if(Platform.OS === 'ios') {
+      if (Platform.OS === 'ios') {
         AuthSession.dismiss();
       }
     } catch (error) {
@@ -98,7 +97,7 @@ export const KeycloakProvider = ({ realm, clientId, url, extraParams, scopes = [
   }
   useEffect(() => {
     if (response) {
-      if(response.type === 'cancel') {
+      if (response.type === 'cancel') {
         setLoggingIn(false);
       }
       handleTokenExchange({ response, discovery, config })

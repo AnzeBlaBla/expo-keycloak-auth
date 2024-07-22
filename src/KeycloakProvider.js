@@ -3,7 +3,6 @@ import { Platform } from 'react-native'
 import * as AuthSession from 'expo-auth-session';
 import {
   useAuthRequest,
-  useAutoDiscovery,
 } from 'expo-auth-session';
 import { KeycloakContext } from './KeycloakContext';
 import useTokenStorage from './useTokenStorage';

@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import * as SecureStore from 'expo-secure-store';
 
 const STORAGE_LIMIT = 2048; // Value is split up into chunks of 2048 bytes
@@ -5,7 +6,7 @@ const NUMBER_KEY = "_number";
 
 export default function useSecureStore(key) {
     return {
-        setItem: async (value) => {
+        setItem: useCallback(async (value) => {
             if (value.length <= STORAGE_LIMIT) {
                 return await SecureStore.setItemAsync(key, value);
             } else {
@@ -16,8 +17,8 @@ export default function useSecureStore(key) {
                     await SecureStore.setItemAsync(key + '_' + i, thisChunk);
                 }
             }
-        },
-        getItem: async () => {
+        }, [key]),
+        getItem: useCallback(async () => {
             const numberOfChunksString = await SecureStore.getItemAsync(key + NUMBER_KEY);
             if (!numberOfChunksString) {
                 return null;
@@ -29,8 +30,8 @@ export default function useSecureStore(key) {
                 value += thisChunk;
             }
             return value;
-        },
-        removeItem: async () => {
+        }, [key]),
+        removeItem: useCallback(async () => {
             const numberOfChunksString = await SecureStore.getItemAsync(key + NUMBER_KEY);
             if (!numberOfChunksString) {
                 return null;
@@ -40,6 +41,6 @@ export default function useSecureStore(key) {
                 await SecureStore.deleteItemAsync(key + '_' + i);
             }
             await SecureStore.deleteItemAsync(key + NUMBER_KEY);
-        },
+        }, [key]),
     };
 }

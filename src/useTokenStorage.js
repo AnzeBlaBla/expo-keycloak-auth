@@ -108,7 +108,7 @@ const useTokenStorage = ({
       }
     }
     if (!!discovery) getTokenFromStorage()
-  }, [discovery]);
+  }, [discovery, getItem])
 
   useEffect(() => {
     // trigger every token update
